@@ -9,10 +9,10 @@
 
 <script>
 export default {
-  name: "Search",
+  name: 'Search',
   data() {
     return {
-      searchInput: ""
+      searchInput: ''
     };
   }
 };
