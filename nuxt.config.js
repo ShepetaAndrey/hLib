@@ -1,6 +1,12 @@
 import colors from 'vuetify/es5/util/colors';
 import env from 'dotenv';
 
+const routerBase = process.env.DEPLOY_ENV === 'GH_PAGES' ? {
+  router: {
+    base: '/hLib/'
+  }
+} : {}
+
 export default {
   mode: 'universal',
   server: {
@@ -32,6 +38,8 @@ export default {
       }
     ]
   },
+
+  ...routerBase,
 
   /* ** Customize the progress-bar color */
   loading: {
