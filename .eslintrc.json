@@ -15,8 +15,10 @@
   },
   "plugins": ["vue"],
   "rules": {
-    "comma-dangle": "off",
+    "comma-dangle": ["warn", "never"],
+    "quotes": ["warn", "single"],
     "no-unused-vars": "warn",
-    "no-console": "warn"
+    "no-console": "warn",
+    "semi": "off"
   }
 }
