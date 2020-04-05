@@ -11,8 +11,13 @@ export default {
     titleTemplate: `%s - ${process.env.npm_package_name}`,
     title: process.env.npm_package_name || '',
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width,initial-scale=1' },
+      {
+        charset: 'utf-8'
+      },
+      {
+        name: 'viewport',
+        content: 'width=device-width,initial-scale=1'
+      },
       {
         hid: 'description ',
         name: 'description ',
@@ -54,6 +59,11 @@ export default {
     '@nuxtjs/dotenv'
   ],
 
+  pwa: {
+    workbox: {
+      autoRegister: false
+    }
+  },
   /* ** Axios module configuration ** See https://axios.nuxtjs.org/options */
   axios: {},
 
