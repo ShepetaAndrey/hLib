@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuex from 'Vuex';
+import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
@@ -29,9 +29,7 @@ const store = () => new Vuex.Store({
     }
   },
   actions: {
-    getBooks: function () {
-
-    }
+    getBooks: function () {}
   }
 })
 
