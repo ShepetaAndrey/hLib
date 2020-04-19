@@ -19,6 +19,7 @@
     "quotes": ["warn", "single"],
     "no-unused-vars": "warn",
     "no-console": "warn",
-    "semi": "off"
+    "semi": "off",
+    "eol-last": "error"
   }
 }
