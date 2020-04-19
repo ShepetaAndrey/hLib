@@ -6,9 +6,7 @@
         <v-col>
           <p class="display-4 font-weight-black text-center">
             hLib
-            <v-icon color="brown--darken-1" size="100%" brown>
-              mdi-bookshelf
-            </v-icon>
+            <v-icon color="brown--darken-1" size="100%" brown>mdi-bookshelf</v-icon>
           </p>
           <p class="display-2 text-center">
             your home library
@@ -62,32 +60,19 @@
 
           <v-carousel-item>
             <v-sheet height="100%">
-              <v-row
-                justify="center"
-                align="center"
-                class="fill-height display-2"
-              >
+              <v-row justify="center" align="center" class="fill-height display-2">
                 <v-col>
                   <v-img
                     max-height="300px"
                     max-width="200px"
                     class="mx-auto"
                     src="./war-and-peace.jpg"
-                  >
-                  </v-img>
+                  ></v-img>
                   <div class="ma-6">
-                    <v-text-field
-                      placeholder="War and peace"
-                      rounded
-                      solo
-                      disabled
-                    >
-                    </v-text-field>
+                    <v-text-field placeholder="War and peace" rounded solo disabled></v-text-field>
                   </div>
                 </v-col>
-                <v-col>
-                  Use search for exploring new books
-                </v-col>
+                <v-col>Use search for exploring new books</v-col>
               </v-row>
             </v-sheet>
           </v-carousel-item>
@@ -95,12 +80,8 @@
       </v-row>
       <!-- some text content -->
       <v-row justify="center">
-        <v-col lg6>
-          {{ dataBoilerpalte }}
-        </v-col>
-        <v-col lg6>
-          {{ dataBoilerpalte }}
-        </v-col>
+        <v-col lg6>{{ dataBoilerpalte }}</v-col>
+        <v-col lg6>{{ dataBoilerpalte }}</v-col>
       </v-row>
     </v-container>
   </v-content>
