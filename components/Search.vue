@@ -1,12 +1,10 @@
 <template>
   <div>
-    <h3>{{searchInput}}</h3>
     <v-text-field
       placeholder="Search for ..."
       rounded
       solo
       clearable
-      @input="findBookByNameOrAuthor"
       @keyup.enter="searchBookByPressingKey"
       v-model="searchInput"
     ></v-text-field>
@@ -32,8 +30,6 @@
 </template>
 
 <script>
-import config from '~/.config.js';
-import convert from 'xml-js';
 import SearchListItem from '~/components/SearchListItem';
 
 export default {
@@ -43,7 +39,6 @@ export default {
   },
   data() {
     return {
-      apiKey: config.GOODREADS_API_KEY,
       searchInput: '',
       books: []
     };
@@ -65,6 +60,7 @@ export default {
       }
     },
     searchInput() {
+      if (this.searchInput && this.searchInput.length === 0) this.books = [];
       this.findBookByNameOrAuthor(this.searchInput).then(
         result => (this.books = result)
       );
@@ -74,13 +70,14 @@ export default {
     async findBookByNameOrAuthor(authorOrBook) {
       if (authorOrBook && authorOrBook.length) {
         try {
-          const API_URL = 'https://www.goodreads.com/search/index.xml';
-          const reqParams = { key: this.apiKey, q: authorOrBook };
+          const API_URL = 'https://www.googleapis.com/books/v1/volumes';
+          const reqParams = {
+            q: authorOrBook
+          };
           this.inProgressOfSearch = true;
           let result = await this.$axios.$get(API_URL, { params: reqParams });
-          let convertedResult = this.parseGoodReadsData(result);
           this.inProgressOfSearch = false;
-          return convertedResult;
+          return result.items.map(x => x.volumeInfo);
         } catch (e) {
           console.warn('WARNING!!!', e);
         }
@@ -88,24 +85,19 @@ export default {
         return [];
       }
     },
-    parseGoodReadsData(response) {
-      let json = convert.xml2js(response);
-      let books = json.elements[0].elements[1].elements[6];
-      return books.elements || [];
-    },
     getAuthor(book) {
-      return book.elements[8].elements[2].elements[1].elements[0].text;
+      if (book.authors) return book.authors[0];
+      else return '';
     },
     getTitle(book) {
-      return book.elements[8].elements[1].elements[0].text;
+      return book.title;
     },
     getCover(book) {
-      let imgSrc = book.elements[8].elements[3].elements[0].text;
-      imgSrc = imgSrc.replace(/_\w{2}\d{2}_\./, '');
-      return imgSrc;
+      if (book.imageLinks) return book.imageLinks.smallThumbnail;
+      else return '/logo-big.png';
     },
     getId(book) {
-      return book.elements[8].elements[0].elements[0].text;
+      return Math.round(Math.random() * 10000);
     },
     searchBookByPressingKey() {
       this.findBookByNameOrAuthor(this.searchInput);
