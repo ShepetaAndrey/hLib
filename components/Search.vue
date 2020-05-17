@@ -10,13 +10,13 @@
     ></v-text-field>
     <v-list>
       <div v-for="book in books" :key="$books.getId(book)">
-        <nuxt-link :to="getBookLink(book)">
+        <a :href="getBookLink(book)">
           <search-list-item
             :author="$books.getAuthor(book)"
             :title="$books.getTitle(book)"
             :img-src="$books.getCover(book)"
           ></search-list-item>
-        </nuxt-link>
+        </a>
       </div>
     </v-list>
     <v-row
