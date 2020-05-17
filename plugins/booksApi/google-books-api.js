@@ -8,10 +8,9 @@ export async function getRange(requestString) {
   return result.items;
 }
 
-export const getBook = async (requestString, options) => {
-  const reqParams = Object.assign({ params : { q: requestString } }, options);
-  const res = (await axios.get(API_URL, reqParams)).data;
-  const book = res.items[0].volumeInfo;
+export const getBook = async (volumeID) => {
+  const res = (await axios.get(`${API_URL}/${volumeID}`)).data;
+  const book = res.volumeInfo;
   return book;
 }
 
@@ -24,16 +23,22 @@ export function  getTitle(book) {
   return book.volumeInfo.title;
 }
 
-export function getCover(book) {
-  if (book.volumeInfo.imageLinks)
-    return book.volumeInfo.imageLinks.smallThumbnail;
-  else return '/logo-big.png';
+export function getCover(book, zoom=1) {
+  const path = 'http://books.google.com/books/content?';
+  const q = {
+    id: book.id,
+    printsec: 'frontcover', // send not default cover;
+    img: 1, // send picture or not
+    zoom: zoom //less value - less picture
+  }
+  const param = (key, value) => `${key}=${value}`;
+  const params = Object.keys(q).reduce((acc, par, index) => {
+    if(index === 0) return param(par, q[par]);
+    return acc + '&' + param(par, q[par])
+  }, new String());
+  return path + params;
 }
 
 export function getId(book) {
-  if (book.volumeInfo.industryIdentifiers) {
-    return book.volumeInfo.industryIdentifiers[0].identifier;
-  } else {
-    return book.id;
-  }
+  return book.id;
 }

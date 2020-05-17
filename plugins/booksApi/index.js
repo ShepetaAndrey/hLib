@@ -1,7 +1,7 @@
 import * as googleAPI from './google-books-api';
 
-export async function getBook(requestString, options={}) {
-  return googleAPI.getBook(requestString, options);
+export async function getBook(bookId) {
+  return googleAPI.getBook(bookId);
 }
 
 export async function getRange(requestString) {
