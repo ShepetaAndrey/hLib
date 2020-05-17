@@ -10,13 +10,13 @@
     ></v-text-field>
     <v-list>
       <div v-for="book in books" :key="$books.getId(book)">
-        <a :href="getBookLink(book)">
+        <nuxt-link :to="getBookLink(book)">
           <search-list-item
             :author="$books.getAuthor(book)"
             :title="$books.getTitle(book)"
             :img-src="$books.getCover(book)"
-          ></search-list-item>
-        </a>
+          />
+        </nuxt-link>
       </div>
     </v-list>
     <v-row
@@ -68,7 +68,7 @@ export default {
     }, 300),
     getBookLink(book) {
       const id = this.$books.getId(book);
-      return `book/${id}`;
+      return `/book/${id}`;
     },
     searchBookByPressingKey() {
       this.findBookByNameOrAuthor(this.searchInput);
