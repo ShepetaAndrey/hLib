@@ -5,7 +5,11 @@ const API_URL = 'https://www.googleapis.com/books/v1/volumes';
 export async function getRange(requestString) {
   const reqParams = { q: requestString };
   const result = (await axios.get(API_URL, { params: reqParams })).data;
-  return result.items;
+  if(result.totalItems) {
+    return result.items;
+  } else {
+    return [];
+  }
 }
 
 export const getBook = async (volumeID) => {
