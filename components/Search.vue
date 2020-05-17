@@ -8,17 +8,19 @@
       @keyup.enter="searchBookByPressingKey"
       v-model="searchInput"
     ></v-text-field>
-    <v-list v-if="!noBooksFound">
-      <div v-for="book in books" :key="getId(book)">
-        <search-list-item
-          :author="getAuthor(book)"
-          :title="getTitle(book)"
-          :img-src="getCover(book)"
-        />
+    <v-list>
+      <div v-for="book in books" :key="$books.getId(book)">
+        <nuxt-link :to="getBookLink(book)">
+          <search-list-item
+            :author="$books.getAuthor(book)"
+            :title="$books.getTitle(book)"
+            :img-src="$books.getCover(book)"
+          ></search-list-item>
+        </nuxt-link>
       </div>
     </v-list>
     <v-row
-      v-else-if="noBooksFound"
+      v-if="noBooksFound"
       justify="center"
       align="center"
       class="mx-auto d-flex flex-column"
@@ -31,6 +33,7 @@
 
 <script>
 import SearchListItem from '~/components/SearchListItem';
+import _ from 'lodash';
 
 export default {
   name: 'Search',
@@ -40,64 +43,32 @@ export default {
   data() {
     return {
       searchInput: '',
+      noBooksFound: false,
       books: []
     };
   },
-  computed: {
-    noBooksFound() {
-      return (
-        this.searchInput &&
-        this.searchInput.length > 0 &&
-        this.books &&
-        this.books.length === 0
-      );
-    }
-  },
   watch: {
-    books() {
-      if (this.searchInput && this.searchInput.lenght === 0) {
-        this.books = [];
-      }
-    },
     searchInput() {
-      if (this.searchInput && this.searchInput.length === 0) this.books = [];
-      this.findBookByNameOrAuthor(this.searchInput).then(
-        result => (this.books = result)
-      );
+      if (!this.searchInput || this.searchInput.length === 0) this.books = [];
+      this.findBookByNameOrAuthor(this.searchInput);
     }
   },
   methods: {
-    async findBookByNameOrAuthor(authorOrBook) {
+    findBookByNameOrAuthor: _.debounce(async function(authorOrBook) {
       if (authorOrBook && authorOrBook.length) {
         try {
-          const API_URL = 'https://www.googleapis.com/books/v1/volumes';
-          const reqParams = {
-            q: authorOrBook
-          };
-          this.inProgressOfSearch = true;
-          let result = await this.$axios.$get(API_URL, { params: reqParams });
-          this.inProgressOfSearch = false;
-          return result.items.map(x => x.volumeInfo);
+          this.books = await this.$books.getRange(authorOrBook);
+          this.noBooksFound = this.books.length ? false : true;
         } catch (e) {
-          console.warn('WARNING!!!', e);
+          console.warn(e);
         }
       } else {
         return [];
       }
-    },
-    getAuthor(book) {
-      if (book.authors) return book.authors[0];
-      else return '';
-    },
-    getTitle(book) {
-      return book.title;
-    },
-    getCover(book) {
-      if (book.imageLinks) return book.imageLinks.smallThumbnail;
-      else return '/logo-big.png';
-    },
-    getId(book) {
-      return Math.round(Math.random() * 10000);
+    }, 300),
+    getBookLink(book) {
+      const id = this.$books.getId(book);
+      return `book/${id}`;
     },
     searchBookByPressingKey() {
       this.findBookByNameOrAuthor(this.searchInput);
