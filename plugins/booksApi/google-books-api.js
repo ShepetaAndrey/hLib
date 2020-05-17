@@ -35,11 +35,10 @@ export function getCover(book, zoom=1) {
     img: 1, // send picture or not
     zoom: zoom //less value - less picture
   }
-  const param = (key, value) => `${key}=${value}`;
-  const params = Object.keys(q).reduce((acc, par, index) => {
-    if(index === 0) return param(par, q[par]);
-    return acc + '&' + param(par, q[par])
-  }, new String());
+  const param = (key, value) => `${key}=${value}`; 
+  const params = Object.entries(q)
+    .map(([key, value]) => param(key, value))
+    .join('&');
   return path + params;
 }
 
