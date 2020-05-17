@@ -9,31 +9,6 @@
         <search-input />
       </v-col>
     </v-row>
-    <v-row
-      justify="center"
-      align="center"
-      class="mx-auto d-flex flex-column"
-      style="max-width: 600px;"
-    >
-      <v-card
-        v-for="book in books"
-        :key="book.title"
-        width="100%"
-        class="mb-1 d-flex flex-row"
-        outlined
-      >
-        <v-col class="col-md-3" lg3>
-          <v-img :src="book.src" width="100" height="150" class="mx-auto"></v-img>
-          <v-rating v-model="rating" size="25" dense></v-rating>
-        </v-col>
-        <v-col class="col-md-9" lg9>
-          <p>{{ book.title }}</p>
-          <p style="overflow: hide;">
-            <i>{{ book.description }}</i>
-          </p>
-        </v-col>
-      </v-card>
-    </v-row>
   </v-content>
 </template>
 
