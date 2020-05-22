@@ -1,13 +1,8 @@
 <template>
-  <v-row
-    justify="center"
-    align="center"
-    class="mx-auto d-flex flex-column"
-    style="max-width: 600px;"
-  >
+  <v-row justify="center" align="center" class="mx-auto d-flex flex-column">
     <v-card width="100%" class="mb-1 d-flex flex-row" outlined>
       <v-col class="col-md-3" lg3>
-        <v-img :src="imgSrc" width="100" height="150" class="mx-auto"></v-img>
+        <v-img :src="imgSrc" class="mx-auto"></v-img>
       </v-col>
       <v-col class="col-md-9" lg9>
         <p>{{ title }}</p>
