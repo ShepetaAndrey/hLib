@@ -14,7 +14,7 @@
       v-model="searchInput"
       :loading="loading"
     ></v-text-field>
-    <v-list style="overflow: auto; max-height: 600px">
+    <v-list v-show="books.length" style="overflow: auto; max-height: 600px">
       <div v-for="book in books" :key="$books.getId(book)">
         <nuxt-link @click.native="openBook" :to="getBookLink(book)">
           <search-list-item
