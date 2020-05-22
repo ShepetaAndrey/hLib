@@ -5,6 +5,7 @@
       id="search-input"
       placeholder="Search for ..."
       solo
+      light
       dense
       clearable
       @blur="collapseSearch"

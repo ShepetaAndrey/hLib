@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar height="55px" dense app color="brown">
+    <v-app-bar height="55px" dense app dark color="brown">
       <v-col class="col-md-5 col-sm-5 col-1 d-sm-flex pa-0">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="d-flex d-sm-none"></v-app-bar-nav-icon>
         <nuxt-link class="pl-5 nav-bar-link d-none d-sm-flex" to="/">Home</nuxt-link>
