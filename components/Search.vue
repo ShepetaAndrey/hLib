@@ -1,13 +1,13 @@
 <template>
-  <div class="d-flex flex-column" id="search-input">
+  <div class="d-flex flex-column" id="search-input-block">
     <v-text-field
+      prepend-inner-icon="mdi-magnify"
+      id="search-input"
       placeholder="Search for ..."
-      rounded
       solo
       dense
       clearable
-      @blur.prevent="collapseSearch"
-      @click:clear="clear"
+      @blur="collapseSearch"
       @focus="openSearch"
       @keyup.enter="searchBookManually"
       @click="restoreLastSearchResults"
@@ -53,7 +53,24 @@ export default {
     searchInput() {
       if (!this.searchInput || this.searchInput.length === 0) this.books = [];
       this.findBookByNameOrAuthor(this.searchInput);
+      if (this.searchInput === null) {
+        const el = document.getElementById('search-input');
+        el.blur();
+        if (window.outerWidth > 1264) {
+          el.style.width = '50%';
+        }
+      }
     }
+  },
+  mounted() {
+    window.addEventListener('resize', () => {
+      const el = document.getElementById('search-input-block');
+      if (window.innerWidth <= 1264) {
+        el.style.width = '100%';
+      } else {
+        el.style.width = '50%';
+      }
+    });
   },
   methods: {
     findBookByNameOrAuthor: _.debounce(async function(authorOrBook) {
@@ -83,27 +100,36 @@ export default {
       this.books = [];
     },
     restoreLastSearchResults(event) {
-      if (this.searchInput !== null || this.searchInput !== '') {
+      if (
+        this.searchInput !== null &&
+        this.searchInput !== '' &&
+        event.target.value !== ''
+      ) {
         event.target.style.width = '100%';
         this.books = this.booksCached;
       }
     },
     openSearch() {
-      const el = document.getElementById('search-input');
+      const el = document.getElementById('search-input-block');
       el.style.width = '100%';
     },
     collapseSearch() {
       setTimeout(() => {
-        const el = document.getElementById('search-input');
-        el.style.width = '50%';
+        if (this.searchInput === null || this.searchInput.length === 0) {
+          if (window.innerWidth > 1264) {
+            const el = document.getElementById('search-input-block');
+            el.style.width = '50%';
+          }
+        }
         this.books = [];
       }, 200);
-    },
-    clear() {
-      const el = document.getElementById('search-input');
-      el.style.width = '50%';
-      this.books = [];
     }
   }
 };
 </script>
+
+<style>
+#search-input-block {
+  transition: all 0.15s ease-in-out;
+}
+</style>
