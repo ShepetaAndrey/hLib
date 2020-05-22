@@ -36,8 +36,8 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <div class="d-flex">
-      <nuxt class="col-8 offset-2" />
+    <div class="d-flex col-8 offset-2">
+      <nuxt />
     </div>
   </v-app>
 </template>
