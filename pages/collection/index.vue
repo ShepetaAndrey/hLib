@@ -1,13 +1,13 @@
 <template>
   <v-content>
-    <v-container>
+    <v-layout>
       <div>{{ url }}</div>
       <v-list v-for="c in collections" :key="c">
         <v-list-item>
           <nuxt-link :to="collectionLink(c)">{{ c }}</nuxt-link>
         </v-list-item>
       </v-list>
-    </v-container>
+    </v-layout>
   </v-content>
 </template>
 

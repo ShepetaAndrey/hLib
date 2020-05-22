@@ -1,8 +1,8 @@
 <template>
   <v-content>
-    <v-container>
+    <v-layout>
       <pre>{{ book }}</pre>
-    </v-container>
+    </v-layout>
   </v-content>
 </template>
 
