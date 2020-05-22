@@ -1,17 +1,27 @@
 <template>
   <v-app>
-    <v-app-bar app clipped-left color="brown" dark>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-spacer></v-spacer>
-      <v-toolbar-title class="font-weight-medium display-1">hLib</v-toolbar-title>
-      <v-spacer></v-spacer>
+    <v-app-bar app color="brown">
+      <v-col class="col-md-5 d-flex">
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="d-flex d-sm-none"></v-app-bar-nav-icon>
+        <nuxt-link class="pl-5 nav-bar-link d-none d-sm-flex" to="/">Home</nuxt-link>
+        <nuxt-link class="pl-5 nav-bar-link d-none d-sm-flex" to="/collection">Collections</nuxt-link>
+      </v-col>
+      <v-col class="col-md-2 col-11 text-center">
+        <v-toolbar-title class="font-weight-medium display-1">
+          <nuxt-link class="nav-bar-link" to="/">hLib</nuxt-link>
+        </v-toolbar-title>
+      </v-col>
+      <v-col class="my-auto col-md-5 col-sm-2 d-none d-sm-flex justify-end">
+        <search />
+      </v-col>
     </v-app-bar>
 
     <!-- NAVIGATOR-DRAWER -->
     <v-navigation-drawer
+      :disable-resize-watcher="true"
       v-model="drawer"
       app
-      clipped
+      temporary
       color="brown lighten-5"
       class="brown--text text--darken-4"
     >
@@ -26,12 +36,18 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <nuxt />
+    <div class="d-flex">
+      <nuxt class="col-8 offset-2" />
+    </div>
   </v-app>
 </template>
 
 <script>
+import SearchVue from '../components/Search.vue';
 export default {
+  components: {
+    search: SearchVue
+  },
   data() {
     return {
       drawer: null,
@@ -61,5 +77,10 @@ export default {
 <style lang="scss" scoped>
 .container {
   max-width: 1100px;
+}
+
+.nav-bar-link {
+  text-decoration: none;
+  color: white;
 }
 </style>
