@@ -1,18 +1,28 @@
 <template>
   <v-app>
     <v-app-bar height="55px" dense app dark color="brown">
-      <v-col class="col-md-5 col-sm-5 col-1 d-sm-flex pa-0">
+      <v-col class="col-md-5 col-sm-4 col-sx-1 d-sm-flex pa-0">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="d-flex d-sm-none"></v-app-bar-nav-icon>
         <nuxt-link class="pl-5 nav-bar-link d-none d-sm-flex" to="/">Home</nuxt-link>
         <nuxt-link class="pl-5 nav-bar-link d-none d-sm-flex" to="/collection">Collections</nuxt-link>
       </v-col>
-      <v-col class="col-md-2 col-sm-2 col-11 text-center">
+      <v-col class="col-md-2 col-sm-5 col-xs-11 text-center">
         <v-toolbar-title class="font-weight-medium display-1">
           <nuxt-link class="nav-bar-link" to="/">hLib</nuxt-link>
         </v-toolbar-title>
       </v-col>
-      <v-col class="pt-2 my-auto col-md-5 col-sm-5 d-none d-sm-flex justify-end">
-        <search />
+      <v-col class="col-md-5 col-sm-3 col-sx-1 pt-2 my-auto">
+        <div class="d-flex justify-end">
+          <search-input
+            show-output="temporary"
+            :scrollable="true"
+            class="d-none d-sm-none d-md-flex"
+          />
+          <nuxt-link
+            class="mt-2 ml-2 nav-bar-link d-xs-flex d-sm-flex d-md-none justify-end"
+            to="/search"
+          >Search</nuxt-link>
+        </div>
       </v-col>
     </v-app-bar>
 
@@ -46,10 +56,11 @@
 import SearchVue from '../components/Search.vue';
 export default {
   components: {
-    search: SearchVue
+    'search-input': SearchVue
   },
   data() {
     return {
+      route: this.$route.name,
       drawer: null,
       width: 100,
       items: [
@@ -70,6 +81,9 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    console.log(this.$route.path);
   }
 };
 </script>
