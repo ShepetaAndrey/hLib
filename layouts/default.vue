@@ -3,8 +3,16 @@
     <v-app-bar height="55px" dense app dark color="brown">
       <v-col class="col-md-5 col-sm-4 col-sx-1 d-sm-flex pa-0">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="d-flex d-sm-none"></v-app-bar-nav-icon>
-        <nuxt-link class="pl-5 nav-bar-link d-none d-sm-flex" to="/">Home</nuxt-link>
-        <nuxt-link class="pl-5 nav-bar-link d-none d-sm-flex" to="/collection">Collections</nuxt-link>
+        <nuxt-link class="nav-bar-link d-none d-sm-flex" to="/">
+          <v-btn text>
+            <v-icon left>mdi-home</v-icon>Home
+          </v-btn>
+        </nuxt-link>
+        <nuxt-link class="nav-bar-link d-none d-sm-flex" to="/collection">
+          <v-btn text>
+            <v-icon left>mdi-bookshelf</v-icon>Collections
+          </v-btn>
+        </nuxt-link>
       </v-col>
       <v-col class="col-md-2 col-sm-5 col-xs-11 text-center">
         <v-toolbar-title class="font-weight-medium display-1">
@@ -18,10 +26,11 @@
             :scrollable="true"
             class="d-none d-sm-none d-md-flex"
           />
-          <nuxt-link
-            class="mt-2 ml-2 nav-bar-link d-xs-flex d-sm-flex d-md-none justify-end"
-            to="/search"
-          >Search</nuxt-link>
+          <nuxt-link class="nav-bar-link d-xs-flex d-sm-flex d-md-none justify-end" to="/search">
+            <v-btn text>
+              <v-icon left>mdi-magnify</v-icon>Search
+            </v-btn>
+          </nuxt-link>
         </div>
       </v-col>
     </v-app-bar>
@@ -96,5 +105,13 @@ export default {
 .nav-bar-link {
   text-decoration: none;
   color: white;
+}
+
+.nav-bar-link:hover {
+  // color: rgb(211, 179, 158);
+}
+
+.nav-bar-link:active {
+  color: rgb(211, 179, 158);
 }
 </style>
