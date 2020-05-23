@@ -1,23 +1,31 @@
 <template>
-  <div class="d-flex flex-column" id="search-input-block">
+  <div
+    class="flex-column"
+    :class="{ closed: !isSearchOpened, standalone: standAlonePage}"
+    id="search-input-block"
+  >
     <v-text-field
       prepend-inner-icon="mdi-magnify"
       id="search-input"
       placeholder="Search for ..."
       solo
       light
+      autocomplete="off"
       dense
       clearable
-      @blur="collapseSearch"
-      @focus="openSearch"
+      @blur="looseFocus"
+      @click="openSearch"
       @keyup.enter="searchBookManually"
-      @click="restoreLastSearchResults"
       v-model="searchInput"
       :loading="loading"
     ></v-text-field>
-    <v-list v-show="books.length" style="overflow: auto; max-height: 600px">
+    <v-list
+      v-show="searchOutputIsVisible"
+      light
+      :class="{ endless: !scrollable, limited: scrollable}"
+    >
       <div v-for="book in books" :key="$books.getId(book)">
-        <nuxt-link @click.native="openBook" :to="getBookLink(book)">
+        <nuxt-link @click.native="looseFocus" :to="getBookLink(book)">
           <search-list-item
             :author="$books.getAuthor(book)"
             :title="$books.getTitle(book)"
@@ -41,46 +49,48 @@ export default {
   components: {
     SearchListItem
   },
+  props: {
+    showOutput: {
+      type: String,
+      default: 'always'
+    },
+    standAlonePage: {
+      type: Boolean,
+      default: false
+    },
+    scrollable: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       searchInput: '',
       noBooksFound: false,
       loading: false,
-      books: [],
-      booksCached: []
+      isSearchOpened: false,
+      searchOutputIsVisible: this.showOutput === 'always' ? true : false,
+      books: []
     };
   },
   watch: {
     searchInput() {
       if (!this.searchInput || this.searchInput.length === 0) this.books = [];
       this.findBookByNameOrAuthor(this.searchInput);
+      if (this.books.length) this.searchOutputIsVisible = true;
       if (this.searchInput === null) {
+        this.isSearchOpened = false;
         const el = document.getElementById('search-input');
         el.blur();
-        if (window.outerWidth > 1264) {
-          el.style.width = '50%';
-        }
       }
     }
-  },
-  mounted() {
-    window.addEventListener('resize', () => {
-      const el = document.getElementById('search-input-block');
-      if (window.innerWidth <= 1264) {
-        el.style.width = '100%';
-      } else {
-        el.style.width = '50%';
-      }
-    });
   },
   methods: {
     findBookByNameOrAuthor: _.debounce(async function(authorOrBook) {
       if (authorOrBook && authorOrBook.length) {
         try {
           this.loading = 'warning';
-          this.books = this.booksCached;
           this.books = await this.$books.getRange(authorOrBook);
-          this.booksCached = JSON.parse(JSON.stringify(this.books));
           this.noBooksFound = this.books.length ? false : true;
           this.loading = false;
         } catch (e) {
@@ -97,32 +107,19 @@ export default {
     searchBookManually() {
       this.findBookByNameOrAuthor(this.searchInput);
     },
-    openBook() {
-      this.books = [];
-    },
-    restoreLastSearchResults(event) {
-      if (
-        this.searchInput !== null &&
-        this.searchInput !== '' &&
-        event.target.value !== ''
-      ) {
-        event.target.style.width = '100%';
-        this.books = this.booksCached;
-      }
-    },
     openSearch() {
-      const el = document.getElementById('search-input-block');
-      el.style.width = '100%';
+      if (window.innerWidth < 960 && this.$route.path !== '/search') {
+        window.location.assign('/search');
+      }
+      this.isSearchOpened = true;
+      this.searchOutputIsVisible = true;
     },
-    collapseSearch() {
+    looseFocus() {
+      if (this.searchInput === null || this.searchInput === '')
+        this.isSearchOpened = false;
       setTimeout(() => {
-        if (this.searchInput === null || this.searchInput.length === 0) {
-          if (window.innerWidth > 1264) {
-            const el = document.getElementById('search-input-block');
-            el.style.width = '50%';
-          }
-        }
-        this.books = [];
+        this.searchOutputIsVisible =
+          this.showOutput === 'always' ? true : false;
       }, 200);
     }
   }
@@ -132,5 +129,25 @@ export default {
 <style>
 #search-input-block {
   transition: all 0.15s ease-in-out;
+  width: 100%;
+}
+
+.endless {
+  max-height: none;
+}
+
+.limited {
+  max-height: 600px !important;
+  overflow: auto;
+}
+
+@media (min-width: 1264px) {
+  #search-input-block.closed {
+    width: 50%;
+  }
+
+  #search-input-block.closed.standalone {
+    width: 100%;
+  }
 }
 </style>
