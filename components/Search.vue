@@ -20,7 +20,7 @@
       :loading="loading"
     ></v-text-field>
     <v-list
-      v-show="searchOutputIsVisible"
+      v-show="searchOutputIsVisible && books.length"
       light
       :class="{ endless: !scrollable, limited: scrollable}"
     >
