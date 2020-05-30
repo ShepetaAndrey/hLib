@@ -35,7 +35,7 @@ export default {
 
   /* ** Customize the progress-bar color */
   loading: {
-    color: '#fff'
+    color: '#00C58E'
   },
 
   /* ** Global CSS */
@@ -62,8 +62,19 @@ export default {
   ],
 
   pwa: {
-    workbox: {
-      autoRegister: false
+    meta: {
+      'theme_color': '#795548'
+    },
+    icon: {
+      iconFileName: 'logo.png'
+    },
+    manifest: {
+      'name': 'hLib - Home library',
+      'short_name': 'hLib',
+      'start_url': '/',
+      'display': 'standalone',
+      'background_color': '#fff',
+      'description': 'Easy to use home library in your browser'
     }
   },
   /* ** Axios module configuration ** See https://axios.nuxtjs.org/options */
