@@ -6,7 +6,7 @@
       </v-col>
       <v-col class="col-md-9 col-sm-10 col-9" lg9>
         <p>{{ title }}</p>
-        <p style="overflow: hide;">
+        <p style="overflow: hide">
           <i>{{ author }}</i>
         </p>
       </v-col>
@@ -20,19 +20,16 @@ export default {
   props: {
     imgSrc: {
       type: String,
-      required: true
+      required: true,
     },
     author: {
       type: String,
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
-
-<style>
-</style>

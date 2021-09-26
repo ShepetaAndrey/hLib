@@ -1,12 +1,13 @@
 <template>
-  <v-content light class="white">
+  <v-main light class="white">
     <v-container align="start" justify="center" class="justify-center">
-      <!-- Heading of the content -->
       <v-row>
         <v-col>
           <p class="display-4 font-weight-black text-center">
             hLib
-            <v-icon color="brown--darken-1" size="100%" brown>mdi-bookshelf</v-icon>
+            <v-icon color="brown--darken-1" size="100%" brown
+              >mdi-bookshelf</v-icon
+            >
           </p>
           <p class="display-2 text-center">
             your home library
@@ -60,7 +61,11 @@
 
           <v-carousel-item>
             <v-sheet height="100%">
-              <v-row justify="center" align="center" class="fill-height display-2">
+              <v-row
+                justify="center"
+                align="center"
+                class="fill-height display-2"
+              >
                 <v-col>
                   <v-img
                     max-height="300px"
@@ -69,7 +74,12 @@
                     src="./war-and-peace.jpg"
                   ></v-img>
                   <div class="ma-6">
-                    <v-text-field placeholder="War and peace" rounded solo disabled></v-text-field>
+                    <v-text-field
+                      placeholder="War and peace"
+                      rounded
+                      solo
+                      disabled
+                    ></v-text-field>
                   </div>
                 </v-col>
                 <v-col>Use search for exploring new books</v-col>
@@ -79,13 +89,13 @@
         </v-carousel>
       </v-row>
     </v-container>
-  </v-content>
+  </v-main>
 </template>
 
 <script>
 export default {
   data() {
     return {};
-  }
+  },
 };
 </script>

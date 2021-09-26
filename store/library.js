@@ -44,6 +44,6 @@ const LibraryModule = {
     }
   }
 }
-  
+
 export default LibraryModule;
-  
+

@@ -1,13 +1,18 @@
 <template>
   <div>
-    <v-flex :v-if="collectionIdList.length" column v-for="id in collectionIdList" :key="id">
+    <v-flex
+      :v-if="collectionIdList.length"
+      column
+      v-for="id in collectionIdList"
+      :key="id"
+    >
       <nuxt-link :to="collectionLink(id)" style="text-decoration: none">
         <v-card hover tile class="my-5">
           <v-flex row wrap class="ma-0 brown lighten-1 white--text">
             <v-col class="d-flex title font-weight-bold">{{ id }}</v-col>
-            <v-col
-              class="d-flex justify-end font-weight-regular"
-            >Books: {{ collectionList(id).length }}</v-col>
+            <v-col class="d-flex justify-end font-weight-regular"
+              >Books: {{ collectionList(id).length }}</v-col
+            >
           </v-flex>
           <v-col>
             <v-flex row justify-center align-self-center class="ma-0">
@@ -17,9 +22,11 @@
                 aspect-ratio="1"
                 max-height="200px"
                 max-width="150px"
-                v-for="bookId in $store.getters['collection/getPreviewBooks'](id)"
+                v-for="bookId in $store.getters['collection/getPreviewBooks'](
+                  id
+                )"
                 :key="bookId"
-                :src="$books.getCover({ id: bookId }, zoom=2)"
+                :src="$books.getCover({ id: bookId }, (zoom = 2))"
               />
             </v-flex>
           </v-col>
@@ -34,8 +41,8 @@ export default {
   props: {
     collectionIdList: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     this.$store.subscribe((mutation, state) => {
@@ -48,7 +55,7 @@ export default {
   },
   mounted() {
     this.$store.commit('collection/initState', {
-      collections: localStorage.getItem('collections')
+      collections: localStorage.getItem('collections'),
     });
   },
   methods: {
@@ -57,10 +64,7 @@ export default {
     },
     collectionLink(id) {
       return '/collection/' + id;
-    }
-  }
+    },
+  },
 };
 </script>
-
-<style>
-</style>

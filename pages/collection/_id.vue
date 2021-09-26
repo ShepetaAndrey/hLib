@@ -1,18 +1,33 @@
 <template>
-  <v-content>
+  <v-main>
     <v-container>
-      <v-flex class="text-center display-1 justify-center">{{ collectionId }}</v-flex>
+      <v-flex class="text-center display-1 justify-center">{{
+        collectionId
+      }}</v-flex>
       <v-divider class="my-5"></v-divider>
       <v-flex justify-center row>
         <v-btn nuxt to="/search" class="d-flex my-3">Add book</v-btn>
-        <v-switch class="d-flex ml-3" v-model="removeProcess" light label="Remove mode"></v-switch>
+        <v-switch
+          class="d-flex ml-3"
+          v-model="removeProcess"
+          light
+          label="Remove mode"
+        ></v-switch>
       </v-flex>
       <v-divider class="my-5"></v-divider>
       <v-flex row>
-        <div class="col-6 col-sm-3 col-md-2 col-lg-2" v-for="id in listOfBookIds" :key="id">
+        <div
+          class="col-6 col-sm-3 col-md-2 col-lg-2"
+          v-for="id in listOfBookIds"
+          :key="id"
+        >
           <nuxt-link :to="bookLink(id)">
             <v-card hover class="py-3">
-              <v-img height="150px" contain :src="$books.getCover({ id: id })"></v-img>
+              <v-img
+                height="150px"
+                contain
+                :src="$books.getCover({ id: id })"
+              ></v-img>
               <v-btn
                 v-if="removeProcess"
                 @click.prevent="removeBookFromCollection(id)"
@@ -28,7 +43,7 @@
         </div>
       </v-flex>
     </v-container>
-  </v-content>
+  </v-main>
 </template>
 
 <script>
@@ -37,7 +52,7 @@ export default {
     return {
       collectionId: this.$route.params.id,
       books: [],
-      removeProcess: false
+      removeProcess: false,
     };
   },
   computed: {
@@ -49,11 +64,11 @@ export default {
       } else {
         return [];
       }
-    }
+    },
   },
   mounted() {
     this.$store.commit('collection/initState', {
-      collections: localStorage.getItem('collections')
+      collections: localStorage.getItem('collections'),
     });
   },
   methods: {
@@ -66,10 +81,10 @@ export default {
     removeBookFromCollection(bookId) {
       this.$store.commit('collection/deleteBook', {
         bookId: bookId,
-        collectionId: this.collectionId
+        collectionId: this.collectionId,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

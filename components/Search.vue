@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex-column"
-    :class="{ closed: !isSearchOpened, standalone: standAlonePage}"
+    :class="{ closed: !isSearchOpened, standalone: standAlonePage }"
     id="search-input-block"
   >
     <v-text-field
@@ -22,7 +22,7 @@
     <v-list
       v-show="searchOutputIsVisible && books.length"
       light
-      :class="{ endless: !scrollable, limited: scrollable}"
+      :class="{ endless: !scrollable, limited: scrollable }"
     >
       <div v-for="book in books" :key="$books.getId(book)">
         <nuxt-link @click.native="looseFocus" :to="getBookLink(book)">
@@ -34,7 +34,12 @@
         </nuxt-link>
       </div>
     </v-list>
-    <v-row v-if="noBooksFound" justify="center" align="center" class="mx-auto d-flex flex-column">
+    <v-row
+      v-if="noBooksFound"
+      justify="center"
+      align="center"
+      class="mx-auto d-flex flex-column"
+    >
       <p>No books were found!</p>
     </v-row>
   </div>
@@ -47,21 +52,21 @@ import _ from 'lodash';
 export default {
   name: 'Search',
   components: {
-    SearchListItem
+    SearchListItem,
   },
   props: {
     showOutput: {
       type: String,
-      default: 'always'
+      default: 'always',
     },
     standAlonePage: {
       type: Boolean,
-      default: false
+      default: false,
     },
     scrollable: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -70,7 +75,7 @@ export default {
       loading: false,
       isSearchOpened: false,
       searchOutputIsVisible: this.showOutput === 'always' ? true : false,
-      books: []
+      books: [],
     };
   },
   watch: {
@@ -83,10 +88,10 @@ export default {
         const el = document.getElementById('search-input');
         el.blur();
       }
-    }
+    },
   },
   methods: {
-    findBookByNameOrAuthor: _.debounce(async function(authorOrBook) {
+    findBookByNameOrAuthor: _.debounce(async function (authorOrBook) {
       if (authorOrBook && authorOrBook.length) {
         try {
           this.loading = 'warning';
@@ -121,8 +126,8 @@ export default {
         this.searchOutputIsVisible =
           this.showOutput === 'always' ? true : false;
       }, 200);
-    }
-  }
+    },
+  },
 };
 </script>
 
