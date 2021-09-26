@@ -15,7 +15,6 @@
   },
   "plugins": ["vue"],
   "rules": {
-    "comma-dangle": ["warn", "never"],
     "quotes": ["warn", "single"],
     "indent": ["error", 2],
     "no-unused-vars": "warn",

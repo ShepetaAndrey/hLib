@@ -1,12 +1,6 @@
 import colors from 'vuetify/es5/util/colors';
-import env from 'dotenv';
 
 export default {
-  mode: 'universal',
-  server: {
-    port: env.PORT, // default: 3000
-    host: env.HOST // default: localhost
-  },
   head: {
     titleTemplate: `%s - ${process.env.npm_package_name}`,
     title: process.env.npm_package_name || '',
@@ -33,32 +27,21 @@ export default {
     ]
   },
 
-  /* ** Customize the progress-bar color */
   loading: {
     color: '#00C58E'
   },
 
-  /* ** Global CSS */
-  css: [],
-
-  /* ** Plugins to load before mounting the App */
   plugins: [
     '~/plugins/books-api'
   ],
 
-  /* ** Nuxt.js dev-modules */
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/vuetify'
   ],
 
-  /* ** Nuxt.js modules */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
   ],
 
   pwa: {
@@ -77,10 +60,7 @@ export default {
       'description': 'Easy to use home library in your browser'
     }
   },
-  /* ** Axios module configuration ** See https://axios.nuxtjs.org/options */
-  axios: {},
 
-  /* ** vuetify module configuration ** https://github.com/nuxt-community/vuetify-module */
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
@@ -98,10 +78,4 @@ export default {
       }
     }
   },
-
-  /* ** Build configuration */
-  build: {
-    /* ** You can extend webpack config here */
-    extend(config, ctx) {}
-  }
 };
