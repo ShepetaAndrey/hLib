@@ -1,6 +1,7 @@
 import colors from 'vuetify/es5/util/colors';
 
 export default {
+  target: 'static',
   head: {
     titleTemplate: `%s - ${process.env.npm_package_name}`,
     title: process.env.npm_package_name || '',
@@ -49,7 +50,7 @@ export default {
       'theme_color': '#795548'
     },
     icon: {
-      iconFileName: 'logo.png'
+      fileName: 'logo.png'
     },
     manifest: {
       'name': 'hLib - Home library',
