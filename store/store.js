@@ -1,14 +1,10 @@
-import Vue from 'vue'
-import Vuex from 'vuex';
-import CollectionsModule from './collection';
-import LibraryModule from './library';
+import Collection from './collection';
+import Library from './library';
 
-Vue.use(Vuex);
-
-const store = () => new Vuex.Store({
+const store = () => ({
   modules: {
-    cols: CollectionsModule,
-    lib: LibraryModule
+    Collection,
+    Library
   }
 })
 
