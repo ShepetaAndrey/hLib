@@ -36,14 +36,14 @@
             <v-divider></v-divider>
             <v-card-text class="d-flex" style="height: 300px">
               <v-radio-group
-                v-if="collectionListWithoutCurrentBook.length"
+                v-if="getCollectionListWithout(bookId).length"
                 v-model="collectionId"
                 column
               >
                 <v-radio
                   :label="col"
                   :value="col"
-                  v-for="col in collectionListWithoutCurrentBook"
+                  v-for="col in getCollectionListWithout(bookId)"
                   :key="col"
                 ></v-radio>
               </v-radio-group>
@@ -59,7 +59,7 @@
                 color="brown darken-1"
                 :disabled="!collectionId"
                 text
-                @click="addBookToCollection()"
+                @click="addBookToCollection"
                 >Add</v-btn
               >
             </v-card-actions>
@@ -94,6 +94,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   data() {
     return {
@@ -106,8 +108,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('collection', ['getCollectionListWithout']),
     collectionListWithoutCurrentBook() {
-      return this.$store.getters['collection/isBookInCollection'](this.bookId);
+      return this.getCollectionListWithout(this.bookId);
     },
     collectionLink() {
       return '/collection/' + this.colId;
@@ -147,12 +150,10 @@ export default {
     });
   },
   methods: {
+    ...mapActions('collection', ['addBook']),
     addBookToCollection() {
       this.colId = this.collectionId;
-      this.$store.commit('collection/addBook', {
-        bookId: this.bookId,
-        collectionId: this.collectionId,
-      });
+      this.addBook({ bookId: this.bookId, collectionId: this.collectionId });
       this.snackbarSuccess = true;
       this.dialog = false;
     },

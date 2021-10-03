@@ -231,11 +231,9 @@
 </template>
 
 <script>
-import CollectionListVue from '../../components/collection/CollectionList.vue';
+import { mapActions } from 'vuex';
+
 export default {
-  components: {
-    'hlib-collection-list': CollectionListVue,
-  },
   data() {
     this.$store.subscribe((mutation, state) => {
       localStorage.setItem(
@@ -271,12 +269,11 @@ export default {
     this.$store.commit('library/initState', {
       libraries: localStorage.getItem('libraries'),
     });
-    this.$store.commit('collection/initState', {
-      collections: localStorage.getItem('collections'),
-    });
+    this.fetchCollectionsFromCache();
     this.currentLibId = this.$store.getters['library/getFirstLibId'];
   },
   methods: {
+    ...mapActions('collection', ['fetchCollectionsFromCache']),
     collectionsNotInLibrary() {
       if (this.currentLibId === null) return [];
       const allColls = this.$store.getters['collection/getAll'].map(
@@ -304,10 +301,6 @@ export default {
           collectionId: this.dialogAddColModel,
           libraryId: this.currentLibId,
         });
-        // localStorage.setItem(
-        //   'libraries',
-        //   JSON.stringify(this.$store.getters['library/getAll'])
-        // );
       }
       this.dialogAddColModel = '';
     },

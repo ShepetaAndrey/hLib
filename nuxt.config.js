@@ -2,6 +2,7 @@ import colors from 'vuetify/es5/util/colors';
 
 export default {
   target: 'static',
+  components: true,
   head: {
     titleTemplate: `%s - ${process.env.npm_package_name}`,
     title: process.env.npm_package_name || '',

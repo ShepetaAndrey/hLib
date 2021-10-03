@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   data() {
     return {
@@ -67,11 +69,10 @@ export default {
     },
   },
   mounted() {
-    this.$store.commit('collection/initState', {
-      collections: localStorage.getItem('collections'),
-    });
+    this.fetchCollectionsFromCache();
   },
   methods: {
+    ...mapActions('collection', ['fetchCollectionsFromCache', 'removeBook']),
     async getBookInfo(bookId) {
       return await this.$books.getBook(bookId);
     },
@@ -79,10 +80,7 @@ export default {
       return '/book/' + id;
     },
     removeBookFromCollection(bookId) {
-      this.$store.commit('collection/deleteBook', {
-        bookId: bookId,
-        collectionId: this.collectionId,
-      });
+      this.removeBook({ bookId, collectionId: this.collectionId });
     },
   },
 };

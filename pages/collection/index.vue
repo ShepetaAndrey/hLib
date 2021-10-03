@@ -48,7 +48,7 @@
               <v-card-text class="d-flex" style="height: 300px">
                 <v-radio-group
                   v-if="collectionIdList.length"
-                  v-model="dialogRemoveColModel"
+                  v-model="removeCollectionId"
                   column
                 >
                   <v-radio
@@ -63,14 +63,18 @@
                 </div>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="brown darken-1" text @click="dialogDelete = false"
-                  >Close</v-btn
-                >
                 <v-btn
                   color="brown darken-1"
-                  :disabled="!dialogRemoveColModel"
                   text
-                  @click="deleteCollection()"
+                  @click="dialogDelete = false"
+                >
+                  Close
+                </v-btn>
+                <v-btn
+                  color="brown darken-1"
+                  :disabled="!removeCollectionId"
+                  text
+                  @click="deleteCollection"
                   >Delete</v-btn
                 >
               </v-card-actions>
@@ -78,25 +82,25 @@
           </v-dialog>
         </div>
       </v-flex>
-      <hlib-collection-list :collectionIdList="collectionIdList" />
+      <hlib-collection-list
+        v-if="collectionIdList.length"
+        :collectionIdList="collectionIdList"
+      />
     </v-container>
   </v-main>
 </template>
 
 <script>
-import CollectionListVue from '../../components/collection/CollectionList.vue';
+import { mapActions } from 'vuex';
 
 export default {
-  components: {
-    'hlib-collection-list': CollectionListVue,
-  },
   data() {
     return {
       url: this.$route.name,
       collectionName: '',
       dialogCreate: false,
       dialogDelete: false,
-      dialogRemoveColModel: '',
+      removeCollectionId: '',
     };
   },
   computed: {
@@ -104,34 +108,30 @@ export default {
       return this.$store.getters['collection/getAll'].map((col) => col.id);
     },
   },
+  mounted() {
+    this.fetchCollectionsFromCache();
+  },
   methods: {
+    ...mapActions('collection', [
+      'fetchCollectionsFromCache',
+      'addCollection',
+      'removeCollection',
+    ]),
     collectionLink(id) {
       return this.url + '/' + id;
     },
     createCollection() {
       if (this.collectionName) {
-        this.$store.commit('collection/addCollection', {
-          collectionId: this.collectionName,
-        });
-        localStorage.setItem(
-          'collections',
-          JSON.stringify(this.$store.getters['collection/getAll'])
-        );
+        this.addCollection(this.collectionName);
       }
       this.collectionName = '';
       this.dialogCreate = false;
     },
     deleteCollection() {
-      if (this.dialogRemoveColModel.length) {
-        this.$store.commit('collection/deleteCollection', {
-          collectionId: this.dialogRemoveColModel,
-        });
-        // localStorage.setItem(
-        //   'collections',
-        //   JSON.stringify(this.$store.getters['collection/getAll'])
-        // );
+      if (this.removeCollectionId.length) {
+        this.removeCollection(this.removeCollectionId);
       }
-      this.dialogRemoveColModel = '';
+      this.removeCollectionId = '';
       this.dialogDelete = false;
     },
   },

@@ -1,6 +1,45 @@
+import StoreRepository from '../services/db';
+
+const db = new StoreRepository();
+
+function Collection(id, books=[]) {
+  this.id = id;
+  this.books = books;
+}
+
 const state = () => ({
   collections: []
-})
+});
+
+const actions = {
+  fetchCollectionsFromCache({ commit, getters }) {
+    if(getters.getAll.length === 0) {
+      commit('SET_COLLECTIONS', db.getCollectionList());
+    }
+  },
+  addCollection({ commit }, collectionId) {
+    db.addCollection(new Collection(collectionId));
+    commit('SET_COLLECTIONS', db.getCollectionList());
+  },
+  removeCollection({ commit }, collectionId) {
+    db.removeCollection(collectionId);
+    commit('SET_COLLECTIONS', db.getCollectionList());
+  },
+  addBook({ commit }, { bookId, collectionId }) {
+    db.addBookToCollection(bookId, collectionId);
+    commit('SET_COLLECTIONS', db.getCollectionList());
+  },
+  removeBook({ commit }, { bookId, collectionId }) {
+    db.removeBookFromCollection(bookId, collectionId);
+    commit('SET_COLLECTIONS', db.getCollectionList());
+  }
+}
+
+const mutations = {
+  SET_COLLECTIONS: (state, collections) => {
+    state.collections = collections;
+  },
+}
 
 const getters = {
   getById: (state) => collectionId => {
@@ -9,7 +48,7 @@ const getters = {
   getAll: (state) => {
     return state.collections;
   },
-  isBookInCollection: state => bookId => {
+  getCollectionListWithout: state => bookId => {
     const collections = state.collections.filter(col => !col.books.includes(bookId));
     return collections.map(col => col.id);
   },
@@ -19,28 +58,9 @@ const getters = {
   }
 }
 
-const mutations = {
-  initState: (state, payload) => {
-    const readyData = payload.collections === 'undefined' ? '[]' : JSON.parse(payload.collections || '[]');
-    state.collections = readyData || [];
-  },
-  addCollection: (state, { collectionId }) => {
-    state.collections.unshift({ id: collectionId, books: [] });
-  },
-  deleteCollection: (state, { collectionId }) => {
-    state.collections = state.collections.filter(c => c.id !== collectionId);
-  },
-  addBook: (state, { bookId, collectionId }) => {
-    state.collections.find(col => col.id === collectionId).books.unshift(bookId);
-  },
-  deleteBook: (state, { bookId, collectionId }) => {
-    let collection = state.collections.find(col => col.id === collectionId);
-    collection.books = collection.books.filter(id => id !== bookId);
-  }
-}
-
 export default {
   state,
   getters,
   mutations,
+  actions,
 }
