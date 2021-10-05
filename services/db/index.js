@@ -1,4 +1,5 @@
 const COLLECTIONS = 'collections';
+const LIBRARIES = 'libraries'
 
 export default class LocalStorage {
   constructor() {}
@@ -8,7 +9,7 @@ export default class LocalStorage {
   }
 
   setCollectionList(collectionList) {
-    localStorage.setItem(COLLECTIONS, JSON.stringify(collectionList));
+    localStorage.setItem(COLLECTIONS, serialize(collectionList));
   }
 
   addCollection(collectionItem) {
@@ -20,6 +21,15 @@ export default class LocalStorage {
   removeCollection(collectionId) {
     const collectionList = this.getCollectionList();
     this.setCollectionList(collectionList.filter(c => c.id !== collectionId));
+    let libraryList = this.getLibraryList();
+    this.setLibraryList(
+      libraryList.map(library => {
+        return {
+          id: library.id,
+          collections: library.collections.filter(id => id !== collectionId)
+        }
+      })
+    )
   }
 
   addBookToCollection(bookId, collectionId) {
@@ -35,6 +45,39 @@ export default class LocalStorage {
     collectionList[targetIndex] = collectionList[targetIndex].books.filter(id => id !== bookId);
     this.setCollectionList(collectionList);
   }
+
+  getLibraryList() {
+    return deserialise(localStorage.getItem(LIBRARIES));
+  }
+
+  setLibraryList(libraryList) {
+    localStorage.setItem(LIBRARIES, serialize(libraryList));
+  }
+
+  addLibrary(libraryItem) {
+    const libraryList = this.getLibraryList();
+    libraryList.unshift(libraryItem);
+    this.setLibraryList(libraryList);
+  }
+
+  removeLibrary(libraryId) {
+    const libraryList = this.getLibraryList();
+    this.setLibraryList(libraryList.filter(l => l.id !== libraryId));
+  }
+
+  addCollectionToLibrary(collectionId, libraryId) {
+    let libraryList = this.getLibraryList();
+    let targetlibrary = libraryList.find(l => l.id === libraryId);
+    targetlibrary.collections.unshift(collectionId);
+    this.setLibraryList(libraryList);
+  }
+
+  removeCollectionFromLibrary(collectionId, libraryId) {
+    let libraryList = this.getLibraryList();
+    let targetIndex = libraryList.findIndex(l => l.id === libraryId);
+    libraryList[targetIndex] = libraryList[targetIndex].collections.filter(id => id !== collectionId);
+    this.setCollectionList(libraryList);
+  }
 }
 
 function deserialise(string) {
@@ -43,4 +86,8 @@ function deserialise(string) {
   } else {
     return []
   }
+}
+
+function serialize(data) {
+  return JSON.stringify(data);
 }

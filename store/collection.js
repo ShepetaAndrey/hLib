@@ -21,8 +21,9 @@ const actions = {
     db.addCollection(new Collection(collectionId));
     commit('SET_COLLECTIONS', db.getCollectionList());
   },
-  removeCollection({ commit }, collectionId) {
+  removeCollection({ commit, dispatch }, collectionId) {
     db.removeCollection(collectionId);
+    dispatch('library/updateLibraries', null, { root: true });
     commit('SET_COLLECTIONS', db.getCollectionList());
   },
   addBook({ commit }, { bookId, collectionId }) {
@@ -59,6 +60,7 @@ const getters = {
 }
 
 export default {
+  namespaced: true,
   state,
   getters,
   mutations,

@@ -31,7 +31,7 @@
                   color="brown darken-1"
                   :disabled="!libraryName"
                   text
-                  @click="createLibrary()"
+                  @click="createLibrary"
                   >Create</v-btn
                 >
               </v-card-actions>
@@ -73,7 +73,7 @@
                   color="brown darken-1"
                   :disabled="!dialogDeleteLibModel"
                   text
-                  @click="deleteLibrary()"
+                  @click="deleteLibrary"
                   >Delete</v-btn
                 >
               </v-card-actions>
@@ -123,14 +123,14 @@
             <v-divider></v-divider>
             <v-card-text class="d-flex" style="height: 300px">
               <v-radio-group
-                v-if="collectionsNotInLibrary().length"
+                v-if="collectionsNotInLibrary.length"
                 v-model="dialogAddColModel"
                 column
               >
                 <v-radio
                   :label="col"
                   :value="col"
-                  v-for="col in collectionsNotInLibrary()"
+                  v-for="col in collectionsNotInLibrary"
                   :key="col"
                 ></v-radio>
               </v-radio-group>
@@ -154,7 +154,7 @@
                 color="brown darken-1"
                 :disabled="!dialogAddColModel"
                 text
-                @click="addCollectionToLibrary()"
+                @click="addCollectionToLibrary"
                 >Add</v-btn
               >
             </v-card-actions>
@@ -184,14 +184,14 @@
             <v-divider></v-divider>
             <v-card-text class="d-flex" style="height: 300px">
               <v-radio-group
-                v-if="libraryCollections().length"
+                v-if="libraryCollectionList.length"
                 v-model="dialogRemoveColModel"
                 column
               >
                 <v-radio
                   :label="col"
                   :value="col"
-                  v-for="col in libraryCollections()"
+                  v-for="col in libraryCollectionList"
                   :key="col"
                 ></v-radio>
               </v-radio-group>
@@ -210,7 +210,7 @@
                 color="brown darken-1"
                 :disabled="!dialogRemoveColModel"
                 text
-                @click="RemoveCollectionFromLibrary()"
+                @click="removeCollectionFromLibrary"
                 >Remove</v-btn
               >
             </v-card-actions>
@@ -231,17 +231,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   data() {
-    this.$store.subscribe((mutation, state) => {
-      localStorage.setItem(
-        'libraries',
-        JSON.stringify(state.library.libraries)
-      );
-    });
-
     return {
       dialogAddCol: false,
       dialogAddColModel: '',
@@ -256,58 +249,62 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('library', ['getAll', 'getById', 'getFirstLibId']),
+    ...mapGetters('collection', { getAllCollections: 'getAll' }),
     libraries() {
-      return this.$store.getters['library/getAll'];
+      return this.getAll;
     },
     collectionIdList() {
       if (this.currentLibId === null) return [];
-      return this.$store.getters['library/getById'](this.currentLibId)
-        .collections;
+      const library = this.getById(this.currentLibId);
+      return library.collections;
+    },
+    libraryCollectionList() {
+      if (!this.currentLibId) {
+        return [];
+      }
+      return this.getById(this.currentLibId).collections;
+    },
+    collectionsNotInLibrary() {
+      if (this.currentLibId === null) return [];
+      const collectionIdList = this.getAllCollections.map((c) => c.id);
+      const library = this.getById(this.currentLibId);
+      return collectionIdList.filter(
+        (col) => !library.collections.includes(col)
+      );
     },
   },
   mounted() {
-    this.$store.commit('library/initState', {
-      libraries: localStorage.getItem('libraries'),
-    });
+    this.fetchLibrariesFromCache();
     this.fetchCollectionsFromCache();
-    this.currentLibId = this.$store.getters['library/getFirstLibId'];
+    this.currentLibId = this.getFirstLibId;
   },
   methods: {
     ...mapActions('collection', ['fetchCollectionsFromCache']),
-    collectionsNotInLibrary() {
-      if (this.currentLibId === null) return [];
-      const allColls = this.$store.getters['collection/getAll'].map(
-        (c) => c.id
-      );
-      const libColls = this.$store.getters['library/getById'](this.currentLibId)
-        .collections;
-      return allColls.filter((col) => !libColls.includes(col));
-    },
-    libraryCollections() {
-      if (this.currentLibId) {
-        return this.$store.getters['library/getById'](this.currentLibId)
-          .collections;
-      } else {
-        return [];
-      }
-    },
+    ...mapActions('library', [
+      'fetchLibrariesFromCache',
+      'addLibrary',
+      'removeLibrary',
+      'addCollection',
+      'removeCollection',
+    ]),
     getLibraryLink(id) {
       return '/library/' + id;
     },
     addCollectionToLibrary() {
       this.dialogAddCol = false;
       if (this.dialogAddColModel) {
-        this.$store.commit('library/addCollection', {
+        this.addCollection({
           collectionId: this.dialogAddColModel,
           libraryId: this.currentLibId,
         });
       }
       this.dialogAddColModel = '';
     },
-    RemoveCollectionFromLibrary() {
+    removeCollectionFromLibrary() {
       this.dialogRemoveCol = false;
       if (this.dialogRemoveColModel) {
-        this.$store.commit('library/removeCollection', {
+        this.removeCollection({
           collectionId: this.dialogRemoveColModel,
           libraryId: this.currentLibId,
         });
@@ -316,11 +313,7 @@ export default {
     },
     createLibrary() {
       if (this.libraryName.length) {
-        this.$store.commit('library/addLibrary', { libId: this.libraryName });
-        // localStorage.setItem(
-        //   'libraries',
-        //   JSON.stringify(this.$store.getters['library/getAll'])
-        // );
+        this.addLibrary(this.libraryName);
       }
       this.currentLibId = this.libraryName;
       this.tab = this.libraries.length - 1;
@@ -329,10 +322,8 @@ export default {
     },
     deleteLibrary() {
       if (this.dialogDeleteLibModel.length) {
-        this.$store.commit('library/deleteLibrary', {
-          libId: this.dialogDeleteLibModel,
-        });
-        this.currentLibId = this.$store.getters['library/getFirstLibId'];
+        this.removeLibrary(this.dialogDeleteLibModel);
+        this.currentLibId = this.getFirstLibId;
         this.dialogDeleteLibModel = '';
         this.tab = 0;
         this.dialogDeleteLib = false;

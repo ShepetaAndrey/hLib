@@ -1,4 +1,13 @@
-const  state = () => ({
+import StoreRepository from '../services/db';
+
+const db = new StoreRepository();
+
+function Library(libraryId) {
+  this.id = libraryId;
+  this.collections = [];
+}
+
+const state = () => ({
   libraries: []
 })
 
@@ -22,32 +31,44 @@ const getters = {
   }
 }
 
+const actions = {
+  fetchLibrariesFromCache({ commit, getters }) {
+    if(getters.getAll.length === 0) {
+      commit('SET_LIBRARIES', db.getLibraryList());
+    }
+  },
+  updateLibraries({ commit }) {
+    commit('SET_LIBRARIES', db.getLibraryList());
+  },
+  addLibrary({ commit }, libraryId) {
+    db.addLibrary(new Library(libraryId));
+    commit('SET_LIBRARIES', db.getLibraryList());
+  },
+  removeLibrary({ commit }, libraryId) {
+    db.removeLibrary(libraryId);
+    commit('SET_LIBRARIES', db.getLibraryList());
+  },
+  addCollection({ commit }, { collectionId, libraryId }) {
+    db.addCollectionToLibrary(collectionId, libraryId);
+    commit('SET_LIBRARIES', db.getLibraryList());
+  },
+  removeCollectionFromLibrary({ commit }, { collectionId, libraryId }) {
+    db.removeCollectionToLibrary(collectionId, libraryId);
+    commit('SET_LIBRARIES', db.getLibraryList());
+  },
+}
+
 const mutations = {
-  initState: (state, payload) => {
-    const readyData = payload.libraries === 'undefined' ? '[]' : JSON.parse(payload.libraries || '[]');
-    state.libraries = readyData || [];
+  SET_LIBRARIES: (state, libraries) => {
+    state.libraries = libraries;
   },
-  addCollection: (state, { collectionId, libraryId }) => {
-    state.libraries
-      .find(lib => lib.id === libraryId)
-      .collections
-      .push(collectionId);
-  },
-  removeCollection: (state, { collectionId, libraryId }) => {
-    let lib = state.libraries.find(lib => lib.id === libraryId);
-    lib.collections = lib.collections.filter(col => col !== collectionId);
-  },
-  addLibrary: (state, { libId }) => {
-    state.libraries.push({ id: libId, collections: [] });
-  },
-  deleteLibrary: (state, { libId }) => {
-    state.libraries = state.libraries.filter(lib => lib.id !== libId);
-  }
 }
 
 export default {
+  namespaced: true,
   state,
   getters,
-  mutations
+  mutations,
+  actions,
 };
 
