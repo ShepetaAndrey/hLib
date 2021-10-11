@@ -76,7 +76,7 @@ export default class LocalStorage {
     let libraryList = this.getLibraryList();
     let targetIndex = libraryList.findIndex(l => l.id === libraryId);
     libraryList[targetIndex] = libraryList[targetIndex].collections.filter(id => id !== collectionId);
-    this.setCollectionList(libraryList);
+    this.setLibraryList(libraryList);
   }
 }
 

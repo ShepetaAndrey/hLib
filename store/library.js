@@ -52,8 +52,8 @@ const actions = {
     db.addCollectionToLibrary(collectionId, libraryId);
     commit('SET_LIBRARIES', db.getLibraryList());
   },
-  removeCollectionFromLibrary({ commit }, { collectionId, libraryId }) {
-    db.removeCollectionToLibrary(collectionId, libraryId);
+  removeCollection({ commit }, { collectionId, libraryId }) {
+    db.removeCollectionFromLibrary(collectionId, libraryId);
     commit('SET_LIBRARIES', db.getLibraryList());
   },
 }
