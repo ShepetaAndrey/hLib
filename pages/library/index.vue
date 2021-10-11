@@ -218,14 +218,22 @@
         </v-dialog>
         <!-- remvoe end -->
       </v-flex>
-      <hlib-collection-list
-        v-if="libraries.length"
-        :collectionIdList="collectionIdList"
-      />
-      <div v-else class="pt-10 text-center display-1">
-        No libraries were found!
-        <br />Try to create one!
+      <div v-if="isLoadingLibraries" class="text-center pa-4">
+        <v-progress-circular :width="5" size="40" color="brown" indeterminate />
       </div>
+      <template v-else>
+        <template v-if="libraries.length">
+          <hlib-collection-item
+            v-for="collectionId in collectionIdList"
+            :key="collectionId"
+            :collection-id="collectionId"
+          />
+        </template>
+        <div v-else class="pt-10 text-center display-1">
+          No libraries were found!
+          <br />Try to create one!
+        </div>
+      </template>
     </v-container>
   </v-main>
 </template>
@@ -246,6 +254,7 @@ export default {
       currentLibId: null,
       dialogDeleteLib: false,
       dialogDeleteLibModel: '',
+      isLoadingLibraries: true,
     };
   },
   computed: {
@@ -275,7 +284,9 @@ export default {
     },
   },
   mounted() {
-    this.fetchLibrariesFromCache();
+    this.fetchLibrariesFromCache().finally(() => {
+      this.isLoadingLibraries = false;
+    });
     this.fetchCollectionsFromCache();
     this.currentLibId = this.getFirstLibId;
   },

@@ -82,10 +82,16 @@
           </v-dialog>
         </div>
       </v-flex>
-      <hlib-collection-list
-        v-if="collectionIdList.length"
-        :collectionIdList="collectionIdList"
-      />
+      <div v-if="isLoadingCollections" class="text-center pa-4">
+        <v-progress-circular :width="5" size="40" color="brown" indeterminate />
+      </div>
+      <template v-else>
+        <hlib-collection-item
+          v-for="collectionId in collectionIdList"
+          :key="collectionId"
+          :collection-id="collectionId"
+        />
+      </template>
     </v-container>
   </v-main>
 </template>
@@ -101,6 +107,7 @@ export default {
       dialogCreate: false,
       dialogDelete: false,
       removeCollectionId: '',
+      isLoadingCollections: true,
     };
   },
   computed: {
@@ -109,7 +116,9 @@ export default {
     },
   },
   mounted() {
-    this.fetchCollectionsFromCache();
+    this.fetchCollectionsFromCache().finally(() => {
+      this.isLoadingCollections = false;
+    });
   },
   methods: {
     ...mapActions('collection', [
