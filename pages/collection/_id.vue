@@ -23,11 +23,7 @@
         >
           <nuxt-link :to="bookLink(id)">
             <v-card hover class="py-3">
-              <v-img
-                height="150px"
-                contain
-                :src="$books.getCover({ id: id })"
-              ></v-img>
+              <v-img height="150px" contain :src="bookCoverLink(id)"></v-img>
               <v-btn
                 v-if="removeProcess"
                 @click.prevent="removeBookFromCollection(id)"
@@ -47,6 +43,8 @@
 </template>
 
 <script>
+import { getCoverLink } from '@/utils/mappers/bookCover';
+
 import { mapActions } from 'vuex';
 
 export default {
@@ -73,8 +71,8 @@ export default {
   },
   methods: {
     ...mapActions('collection', ['fetchCollectionsFromCache', 'removeBook']),
-    async getBookInfo(bookId) {
-      return await this.$books.getBook(bookId);
+    bookCoverLink(id) {
+      return getCoverLink(id);
     },
     bookLink(id) {
       return '/book/' + id;

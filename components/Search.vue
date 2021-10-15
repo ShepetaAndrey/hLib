@@ -15,7 +15,7 @@
       clearable
       @blur="looseFocus"
       @click="openSearch"
-      @keyup.enter="searchBookManually"
+      @keyup.enter="findBookByNameOrAuthor(searchInput)"
       v-model="searchInput"
       :loading="loading"
     ></v-text-field>
@@ -24,12 +24,12 @@
       light
       :class="{ endless: !scrollable, limited: scrollable }"
     >
-      <div v-for="book in books" :key="$books.getId(book)">
-        <nuxt-link @click.native="looseFocus" :to="getBookLink(book)">
+      <div v-for="book in books" :key="bookId(book)">
+        <nuxt-link @click.native="looseFocus" :to="bookLink(book)">
           <search-list-item
-            :author="$books.getAuthor(book)"
-            :title="$books.getTitle(book)"
-            :img-src="$books.getCover(book)"
+            :author="bookAuthor(book)"
+            :title="bookTitle(book)"
+            :img-src="bookCoverLink(book)"
           />
         </nuxt-link>
       </div>
@@ -46,8 +46,14 @@
 </template>
 
 <script>
-import SearchListItem from '~/components/SearchListItem';
 import _ from 'lodash';
+
+import SearchListItem from '@/components/SearchListItem';
+
+import { getBookList } from '@/services/api/google-books';
+
+import BookMapper from '@/utils/mappers/book';
+import { getCoverLink } from '@/utils/mappers/bookCover';
 
 export default {
   name: 'Search',
@@ -95,7 +101,7 @@ export default {
       if (authorOrBook && authorOrBook.length) {
         try {
           this.loading = 'warning';
-          this.books = await this.$books.getRange(authorOrBook);
+          this.books = await getBookList(authorOrBook);
           this.noBooksFound = this.books.length ? false : true;
           this.loading = false;
         } catch (e) {
@@ -105,12 +111,25 @@ export default {
         return [];
       }
     }, 300),
-    getBookLink(book) {
-      const id = this.$books.getId(book);
-      return `/book/${id}`;
+    bookLink(bookRaw) {
+      const book = new BookMapper(bookRaw);
+      return `/book/${book.id}`;
     },
-    searchBookManually() {
-      this.findBookByNameOrAuthor(this.searchInput);
+    bookAuthor(bookRaw) {
+      const book = new BookMapper(bookRaw);
+      return book.author;
+    },
+    bookTitle(bookRaw) {
+      const book = new BookMapper(bookRaw);
+      return book.title;
+    },
+    bookId(bookRaw) {
+      const book = new BookMapper(bookRaw);
+      return book.id;
+    },
+    bookCoverLink(bookRaw) {
+      const book = new BookMapper(bookRaw);
+      return getCoverLink(book.id);
     },
     openSearch() {
       if (window.innerWidth < 960 && this.$route.path !== '/search') {

@@ -3,7 +3,7 @@
     <v-layout>
       <v-flex column>
         <v-img
-          :src="$books.getCover({ id: bookId })"
+          :src="bookCoverLink(bookId)"
           contain
           aspect-ratio="1"
           max-height="300px"
@@ -94,6 +94,11 @@
 </template>
 
 <script>
+import { getBook } from '@/services/api/google-books';
+
+import { getCoverLink } from '@/utils/mappers/bookCover';
+import BookMapper from '@/utils/mappers/book';
+
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -141,12 +146,12 @@ export default {
       'language',
     ];
 
-    const data = await this.$books.getBook(this.bookId);
-    const filteredKeys = Object.keys(data).filter((x) => {
+    const book = new BookMapper(await getBook(this.bookId));
+    const filteredKeys = Object.keys(book.data).filter((x) => {
       return interestingFields.includes(x);
     });
     filteredKeys.forEach((key) => {
-      this.book = Object.assign({}, this.book, { [key]: data[key] });
+      this.book = Object.assign({}, this.book, { [key]: book.data[key] });
     });
   },
   methods: {
@@ -156,6 +161,9 @@ export default {
       this.addBook({ bookId: this.bookId, collectionId: this.collectionId });
       this.snackbarSuccess = true;
       this.dialog = false;
+    },
+    bookCoverLink(bookId) {
+      return getCoverLink(bookId);
     },
   },
 };
