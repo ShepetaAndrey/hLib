@@ -49,6 +49,9 @@ const getters = {
   getAll: (state) => {
     return state.collections;
   },
+  getAllBookIdList: (state) => {
+    return state.collections.reduce((acc, col) => [...acc, ...col.books], [])
+  },
   getCollectionListWithout: state => bookId => {
     const collections = state.collections.filter(col => !col.books.includes(bookId));
     return collections.map(col => col.id);
