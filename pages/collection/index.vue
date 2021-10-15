@@ -86,6 +86,7 @@
         <v-progress-circular :width="5" size="40" color="brown" indeterminate />
       </div>
       <template v-else>
+        <div class="pa-2" />
         <hlib-collection-item
           v-for="collectionId in collectionIdList"
           :key="collectionId"
