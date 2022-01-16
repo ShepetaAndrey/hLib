@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-img
+      class="d-flex justify-center"
       contain
       aspect-ratio="1"
       max-height="200px"
@@ -8,6 +9,15 @@
       :src="bookCoverLink"
     />
     <p class="text-center text-truncate mb-0">{{ title }}</p>
+    <v-rating
+      class="d-flex justify-center pb-4"
+      color="warning"
+      hover
+      dense
+      length="5"
+      size="20"
+      :value="3"
+    ></v-rating>
   </div>
 </template>
 

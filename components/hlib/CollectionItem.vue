@@ -1,14 +1,29 @@
 <template>
-  <nuxt-link :to="collectionLink(collectionId)" style="text-decoration: none">
-    <v-card hover tile class="mb-5">
-      <v-flex row wrap class="ma-0 brown lighten-1 white--text">
+  <nuxt-link
+    :to="collectionLink(collectionId)"
+    style="text-decoration: none"
+  >
+    <v-card
+      hover
+      tile
+      class="mb-5"
+    >
+      <v-flex
+        row
+        wrap
+        class="ma-0 brown lighten-1 white--text"
+      >
         <v-col class="d-flex title font-weight-bold">{{ collectionId }}</v-col>
         <v-col class="d-flex justify-end font-weight-regular">
           Books: {{ getById(collectionId).books.length }}
         </v-col>
       </v-flex>
       <v-col>
-        <v-flex row justify-center align-self-center>
+        <v-flex
+          row
+          justify-center
+          align-self-center
+        >
           <hlib-book-item
             v-for="bookId in getPreviewBooks(collectionId)"
             :key="bookId"
