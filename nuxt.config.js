@@ -32,16 +32,11 @@ export default {
     color: '#00C58E'
   },
 
-  plugins: [
-    '~/plugins/books-api'
-  ],
-
   buildModules: [
     '@nuxtjs/vuetify'
   ],
 
   modules: [
-    '@nuxtjs/axios',
     '@nuxtjs/pwa',
   ],
 
