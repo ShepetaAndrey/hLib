@@ -1,13 +1,21 @@
 <template>
-  <div>
+  <div style="max-width: 150px; max-height: 200px">
     <v-img
       contain
       aspect-ratio="1"
-      max-height="200px"
-      max-width="150px"
       :src="bookCoverLink"
     />
     <p class="text-center text-truncate mb-0">{{ title }}</p>
+    <div class="d-flex justify-center">
+      <v-rating
+        color="warning"
+        dense
+        hover
+        length="5"
+        size="18"
+        :value="rating"
+      ></v-rating>
+    </div>
   </div>
 </template>
 
@@ -27,6 +35,7 @@ export default {
   data() {
     return {
       book: undefined,
+      rating: Math.floor(Math.random() * 5),
     };
   },
   computed: {

@@ -5,8 +5,15 @@
         collectionId
       }}</v-flex>
       <v-divider class="my-5"></v-divider>
-      <v-flex justify-center row>
-        <v-btn nuxt to="/search" class="d-flex my-3">Add book</v-btn>
+      <v-flex
+        justify-center
+        row
+      >
+        <v-btn
+          nuxt
+          to="/search"
+          class="d-flex my-3"
+        >Add book</v-btn>
         <v-switch
           class="d-flex ml-3"
           v-model="removeProcess"
@@ -22,8 +29,25 @@
           :key="id"
         >
           <nuxt-link :to="bookLink(id)">
-            <v-card hover class="py-3">
-              <v-img height="150px" contain :src="bookCoverLink(id)"></v-img>
+            <v-card
+              hover
+              class="py-3"
+            >
+              <v-img
+                height="150px"
+                contain
+                :src="bookCoverLink(id)"
+              ></v-img>
+              <div class="d-flex justify-center">
+                <v-rating
+                  color="warning"
+                  dense
+                  hover
+                  length="5"
+                  size="18"
+                  :value="Math.floor(Math.random() * 5)"
+                ></v-rating>
+              </div>
               <v-btn
                 v-if="removeProcess"
                 @click.prevent="removeBookFromCollection(id)"

@@ -1,5 +1,8 @@
 <template>
-  <v-main light class="white">
+  <v-main
+    light
+    class="white"
+  >
     <v-container>
       <v-row>
         <v-col class="col-12 col-md-3">
@@ -30,25 +33,48 @@
               <h3>{{ name }} {{ lastname }}</h3>
               <small>Telegram</small>
               <h5>
-                <a :href="`https://t.me/${telegram}`" target="_blank">
+                <a
+                  :href="`https://t.me/${telegram}`"
+                  target="_blank"
+                >
                   {{ '@' + telegram }}
                 </a>
               </h5>
               <small>Email</small>
               <h5>
-                <a :href="`mailto:${email}`" target="_blank">
+                <a
+                  :href="`mailto:${email}`"
+                  target="_blank"
+                >
                   {{ email }}
                 </a>
               </h5>
+            </div>
+            <div class="col-12">
+              <h3>Recommendations</h3>
+              <hlib-book-item
+                :book-id="bookId"
+                v-for="bookId in ['3klAPCIB3hQC', 'R9QnEAAAQBAJ', '9cIPCaHMRAcC']"
+                :key="bookId"
+              />
             </div>
           </v-row>
         </v-col>
         <v-col class="col-12 col-md-9">
           <div>
             <v-card>
-              <v-tabs v-model="currentTab" color="brown" grow show-arrows>
+              <v-tabs
+                v-model="currentTab"
+                color="brown"
+                grow
+                show-arrows
+              >
                 <v-tabs-slider color="brown"></v-tabs-slider>
-                <v-tab @click="selectTab" v-for="tab in tabs" :key="tab">{{
+                <v-tab
+                  @click="selectTab"
+                  v-for="tab in tabs"
+                  :key="tab"
+                >{{
                   tab
                 }}</v-tab>
               </v-tabs>
@@ -63,14 +89,21 @@
                 :collectionId="collectionId"
               />
             </div>
-            <v-flex v-else-if="currentType === 'book'" row class="ma-0">
+            <v-flex
+              v-else-if="currentType === 'book'"
+              row
+              class="ma-0"
+            >
               <div
                 class="col-6 col-sm-3"
                 v-for="bookId in bookIdList"
                 :key="bookId"
               >
                 <nuxt-link :to="bookLink(bookId)">
-                  <v-card hover class="py-3">
+                  <v-card
+                    hover
+                    class="py-3"
+                  >
                     <hlib-book-item :book-id="bookId" />
                   </v-card>
                 </nuxt-link>
