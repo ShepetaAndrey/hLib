@@ -42,7 +42,7 @@ export default class LocalStorage {
   removeBookFromCollection(bookId, collectionId) {
     let collectionList = this.getCollectionList();
     let targetIndex = collectionList.findIndex(c => c.id === collectionId);
-    collectionList[targetIndex] = collectionList[targetIndex].books.filter(id => id !== bookId);
+    collectionList[targetIndex].books = collectionList[targetIndex].books.filter(id => id !== bookId);
     this.setCollectionList(collectionList);
   }
 
